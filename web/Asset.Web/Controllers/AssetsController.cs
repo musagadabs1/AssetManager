@@ -17,8 +17,28 @@ namespace Asset.Web.Controllers
             IEnumerable<AssetViewModel> assets = null;
             using (client =new HttpClient())
             {
-                client.BaseAddress = new Uri("");
+                client.BaseAddress = new Uri("https://localhost:44359/api/Assets/");
                 var respond = await client.GetAsync("GetAssets");
+
+                if (respond.IsSuccessStatusCode)
+                {
+                    assets = await respond.Content.ReadAsAsync<IList<AssetViewModel>>();
+                }
+                else
+                {
+                    assets = Enumerable.Empty<AssetViewModel>();
+                    ModelState.AddModelError(string.Empty, "Server error. Please contact ICT");
+                }
+            }
+            return View(assets);
+        }
+        public async Task<IActionResult> AssetSummary()
+        {
+            IEnumerable<AssetViewModel> assets = null;
+            using (client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44359/api/Assets/");
+                var respond = await client.GetAsync("GetAssetSummaries");
 
                 if (respond.IsSuccessStatusCode)
                 {

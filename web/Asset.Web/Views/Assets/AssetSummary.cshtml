@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Asset.Web.Models.AssetSummaryViewModel>
+
+@{
+    ViewData["Title"] = "AssetSummary";
+}
+
+<h1>Asset Summary</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               EMPLOYEE NAME
+            </th>
+            <th>
+                DEPARTMENT
+            </th>
+            <th>
+                LOCATION
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EmployeeId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EmployeeId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EmployeeId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
