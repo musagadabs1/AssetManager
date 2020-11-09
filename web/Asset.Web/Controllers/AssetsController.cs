@@ -18,15 +18,11 @@ namespace Asset.Web.Controllers
             using (client =new HttpClient())
             {
                 client.BaseAddress = new Uri("");
-                var respondTask = await client.GetAsync("GetAssets");
-                //respondTask.Wait();
+                var respond = await client.GetAsync("GetAssets");
 
-                var result = respondTask;
-
-                if (result.IsSuccessStatusCode)
+                if (respond.IsSuccessStatusCode)
                 {
-                    var readTask = await result.Content.ReadAsAsync<IList<AssetViewModel>>();
-                    assets = readTask;
+                    assets = await respond.Content.ReadAsAsync<IList<AssetViewModel>>();
                 }
                 else
                 {
