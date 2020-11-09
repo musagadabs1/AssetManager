@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Asset.Web.Controllers
 {
@@ -10,23 +12,29 @@ namespace Asset.Web.Controllers
     {
         private HttpClient client = new HttpClient();
         // GET: AssetsController
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            using(client =new HttpClient())
+            IEnumerable<AssetViewModel> assets = null;
+            using (client =new HttpClient())
             {
                 client.BaseAddress = new Uri("");
-                var respondTask = client.GetAsync("GetAssets");
-                respondTask.Wait();
+                var respondTask = await client.GetAsync("GetAssets");
+                //respondTask.Wait();
 
-                var result = respondTask.Result;
+                var result = respondTask;
 
                 if (result.IsSuccessStatusCode)
                 {
-                    var readTask = result.Content.ReadAsAsync<IList<AssetViewModel>>();
-                    readTask.Wait();
+                    var readTask = await result.Content.ReadAsAsync<IList<AssetViewModel>>();
+                    assets = readTask;
+                }
+                else
+                {
+                    assets = Enumerable.Empty<AssetViewModel>();
+                    ModelState.AddModelError(string.Empty, "Server error. Please contact ICT");
                 }
             }
-            return View();
+            return View(assets);
         }
 
         // GET: AssetsController/Details/5
