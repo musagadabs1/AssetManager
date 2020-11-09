@@ -72,6 +72,7 @@ namespace Asset.Web.Controllers
         {
             try
             {
+
                 return RedirectToAction(nameof(Index));
             }
             catch
