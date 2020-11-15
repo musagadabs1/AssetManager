@@ -74,8 +74,7 @@ namespace service.api.Controllers
             {
                 EmployeeName = x.EmployeeName,
                 EmployeeId = x.EmployeeId,
-                Department = x.Department,
-                Location=x.Location
+                Department = x.Department
             }).ToList();
 
             return assetSummaryDTo; //new string[] { "value1", "value2" };
@@ -125,18 +124,26 @@ namespace service.api.Controllers
                     ReturnedOn = assetDTO.ReturnedOn
                 };
                 await _unitOfWork.Asset.AddAssetAsync(asset);
-                var emp = _unitOfWork.Employee.GetEmployee(asset.EmployeeId);
-                var dept = _unitOfWork.Department.GetDepartment(asset.DepartmentId);
-                var assetSummary = new AssetSummary
+
+                //Get previous staff record
+                var getAssetSummary = await _unitOfWork.AssetSummary.GetAssetSummariesAsync(x => x.EmployeeId == asset.EmployeeId);
+
+                //Determin whether the employee is assigned to a device already
+                if (getAssetSummary.Count()<=0)
                 {
-                    Department = dept.Name,
-                    EmployeeId = asset.EmployeeId,
-                    EmployeeName = emp.FirstName + " " + emp.MiddleName + " " + emp.LastName,
-                    Location = asset.Location
-                };
-                _unitOfWork.AssetSummary.AddAssetSummary(assetSummary);
-                await _unitOfWork.AssetSummary.SaveAsync();
-                _unitOfWork.Asset.Save();
+                    var emp = _unitOfWork.Employee.GetEmployee(asset.EmployeeId);
+                    var dept = _unitOfWork.Department.GetDepartment(asset.DepartmentId);
+                    var assetSummary = new AssetSummary
+                    {
+                        Department = dept.Name,
+                        EmployeeId = asset.EmployeeId,
+                        EmployeeName = emp.FirstName + " " + emp.MiddleName + " " + emp.LastName
+                        //Location = asset.Location
+                    };
+                    _unitOfWork.AssetSummary.AddAssetSummary(assetSummary);
+                    await _unitOfWork.AssetSummary.SaveAsync();
+                }
+               await _unitOfWork.Asset.SaveAsync();
 
             }
             catch (Exception ex)

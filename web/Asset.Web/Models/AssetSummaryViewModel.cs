@@ -11,6 +11,5 @@ namespace Asset.Web.Models
         public string EmployeeName { get; set; }
         public string Department { get; set; }
         public string EmployeeId { get; set; }
-        public string Location { get; set; }
     }
 }

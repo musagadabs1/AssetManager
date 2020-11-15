@@ -17,8 +17,8 @@ namespace services.data.Models
         [Required]
         [StringLength(50)]
         public string EmployeeId { get; set; }
-        [StringLength(50)]
-        public string Location { get; set; }
+        //[StringLength(50)]
+        //public string Location { get; set; }
 
     }
 }

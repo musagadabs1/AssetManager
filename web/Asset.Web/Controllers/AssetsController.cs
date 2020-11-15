@@ -1,5 +1,8 @@
-﻿using Asset.Web.Models;
+﻿using Asset.Web.Factory;
+using Asset.Web.Models;
+using Asset.Web.Utility;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,31 +13,42 @@ namespace Asset.Web.Controllers
 {
     public class AssetsController : Controller
     {
+        private readonly IOptions<MySettingsModel> appSettings;
+        public AssetsController(IOptions<MySettingsModel> app)
+        {
+            appSettings = app;
+            //new Uri("https://localhost:44359/api/Assets/");
+            //ApplicationSettings.WebApiUrl = appSettings.Value.WebApiBaseUrl;
+            ApplicationSettings.WebApiUrl = "https://localhost:44359/api/Assets/";
+        }
         private HttpClient client = new HttpClient();
         // GET: AssetsController
         public async Task<IActionResult> Index()
         {
-            IEnumerable<AssetViewModel> assets = null;
-            using (client =new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://localhost:44359/api/Assets/");
-                var respond = await client.GetAsync("GetAssets");
+            IEnumerable<AssetSummaryViewModel> assets = await ApiClientFactory.Instance.GetAssetSummaries(); 
 
-                if (respond.IsSuccessStatusCode)
-                {
-                    assets = await respond.Content.ReadAsAsync<IList<AssetViewModel>>();
-                }
-                else
-                {
-                    assets = Enumerable.Empty<AssetViewModel>();
-                    ModelState.AddModelError(string.Empty, "Server error. Please contact ICT");
-                }
-            }
+            //var data = await ApiClientFactory.Instance.GetAssetSummaries();
+            //assets = data;
+            //using (client =new HttpClient())
+            //{
+            //    client.BaseAddress = new Uri("https://localhost:44359/api/Assets/");
+            //    var respond = await client.GetAsync("GetAssetSummaries");
+
+            //    if (respond.IsSuccessStatusCode)
+            //    {
+            //        assets = await respond.Content.ReadAsAsync<IList<AssetSummaryViewModel>>();
+            //    }
+            //    else
+            //    {
+            //        assets = Enumerable.Empty<AssetSummaryViewModel>();
+            //        ModelState.AddModelError(string.Empty, "Server error. Please contact ICT");
+            //    }
+            //}
             return View(assets);
         }
         public async Task<IActionResult> AssetSummary()
         {
-            IEnumerable<AssetViewModel> assets = null;
+            IEnumerable<AssetViewModel> assets = null;//ApiClientFactory.Instance.GetAssetSummaries();
             using (client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:44359/api/Assets/");
@@ -54,7 +68,29 @@ namespace Asset.Web.Controllers
         }
 
         // GET: AssetsController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(string id)
+        {
+            //var getAssetsByEmployee=_u
+            IEnumerable<AssetViewModel> assets = await ApiClientFactory.Instance.GetAssetDetails(id);
+            //using (client = new HttpClient())
+            //{
+            //    client.BaseAddress = new Uri("https://localhost:44359/api/Assets/");
+            //    var respond = await client.GetAsync("GetAssetsByEmployeeId/" + id);
+
+            //    if (respond.IsSuccessStatusCode)
+            //    {
+            //        assets = await respond.Content.ReadAsAsync<IList<AssetViewModel>>();
+            //    }
+            //    else
+            //    {
+            //        assets = Enumerable.Empty<AssetViewModel>();
+            //        ModelState.AddModelError(string.Empty, "Server error. Please contact ICT");
+            //    }
+            //}
+            return View(assets);
+        }
+        // GET: AssetsController/Details/5
+        public ActionResult ReturnDevice(int id)
         {
             return View();
         }
@@ -68,16 +104,30 @@ namespace Asset.Web.Controllers
         // POST: AssetsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(AssetViewModel model)
+        public async Task<JsonResult> Create(AssetViewModel model)
         {
             try
             {
 
-                return RedirectToAction(nameof(Index));
+                //CreateHttpContent<T>(content)
+
+                var response = await ApiClientFactory.Instance.SaveAsset(model);
+                //var respond = await client.PostAsync("PostAsset", CreateHttpContent model);
+
+                //if (respond.IsSuccessStatusCode)
+                //{
+                //    assets = await respond.Content.ReadAsAsync<IList<AssetViewModel>>();
+                //}
+                //else
+                //{
+                //    assets = Enumerable.Empty<AssetViewModel>();
+                //    ModelState.AddModelError(string.Empty, "Server error. Please contact ICT");
+                //}
+                return Json(response);
             }
             catch
             {
-                return View();
+               throw new Exception("Something is wrong");
             }
         }
 

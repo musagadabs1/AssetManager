@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Asset.Web.Models.AssetViewModel>
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>Device Details</h3>
+<div class="table-responsive">
+    <table class="table table-responsive table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Device Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Location
+                </th>
+                <th>
+                    Condition
+                </th>
+                <th>
+                    Serial Number
+                </th>
+                <th>
+                    Assigned On
+                </th>
+                <th>
+                    Returned On
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Condition)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SerialNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssignedOn)
+                    </td>
+                    @if (item.Status == "Returned")
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReturnedOn)
+                        </td>
+                    }
+                    else
+                    {
+                        <td>In Used</td>
+                    }
+                    <td>
+                        <a asp-action="ReturnDevice" asp-route-id="@item.Id">Return Device</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

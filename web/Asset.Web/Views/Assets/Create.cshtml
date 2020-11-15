@@ -1,0 +1,81 @@
+﻿@model Asset.Web.Models.AssetViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h3>Assigned new Device</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Condition" class="control-label"></label>
+                <input asp-for="Condition" class="form-control" />
+                <span asp-validation-for="Condition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SerialNumber" class="control-label"></label>
+                <input asp-for="SerialNumber" class="form-control" />
+                <span asp-validation-for="SerialNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssignedTo" class="control-label"></label>
+                <input asp-for="AssignedTo" class="form-control" />
+                <span asp-validation-for="AssignedTo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssignedOn" class="control-label"></label>
+                <input asp-for="AssignedOn" class="form-control" />
+                <span asp-validation-for="AssignedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Signature" class="control-label"></label>
+                <input asp-for="Signature" class="form-control" />
+                <span asp-validation-for="Signature" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReturnedOn" class="control-label"></label>
+                <input asp-for="ReturnedOn" class="form-control" />
+                <span asp-validation-for="ReturnedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DepartmentId" class="control-label"></label>
+                <input asp-for="DepartmentId" class="form-control" />
+                <span asp-validation-for="DepartmentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+}
